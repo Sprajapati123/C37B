@@ -1,7 +1,9 @@
 package com.example.c37b
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -64,7 +67,7 @@ class RegistrationActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegisterBody(){
+fun RegisterBody() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
@@ -82,13 +85,22 @@ fun RegisterBody(){
 
     var selectedDate by remember { mutableStateOf("") }
 
+    val sharedPreference = context.getSharedPreferences(
+        "User",
+        Context.MODE_PRIVATE
+    )
+
+
+    val editor = sharedPreference.edit()
+
 
     var datepicker = DatePickerDialog(
-        context,{
-            _,y,m,d-> selectedDate = "$d/${m+1}/$y"
+        context, { _, y, m, d ->
+            selectedDate = "$d/${m + 1}/$y"
 
-        },year,month,day
+        }, year, month, day
     )
+
 
     Scaffold { padding ->
         Column(
@@ -160,7 +172,8 @@ fun RegisterBody(){
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth().clickable{
+                    .fillMaxWidth()
+                    .clickable {
                         datepicker.show()
                     }
                     .padding(horizontal = 15.dp)
@@ -209,7 +222,7 @@ fun RegisterBody(){
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-                ) {
+            ) {
                 Checkbox(
                     checked = checkbox,
                     onCheckedChange = {
@@ -223,6 +236,28 @@ fun RegisterBody(){
                 Text("I agree to terms & Conditions")
             }
 
+            Button(onClick = {
+                if (!checkbox) {
+                    Toast.makeText(
+                        context,
+                        "Please accept terms & conditions",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    editor.putString("email", email)
+                    editor.putString("password", password)
+                    editor.putString("date", selectedDate)
+
+                    editor.apply()
+                    Toast.makeText(context,
+                        "Registration success",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }) {
+                Text("Register")
+            }
+
+
         }
     }
 
@@ -230,6 +265,6 @@ fun RegisterBody(){
 
 @Preview
 @Composable
-fun RegisterPreview(){
+fun RegisterPreview() {
     RegisterBody()
 }
