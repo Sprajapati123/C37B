@@ -1,5 +1,6 @@
 package com.example.c37b
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -76,6 +77,7 @@ fun RegisterBody() {
 
 
     val context = LocalContext.current
+    val activity = context as Activity
 
     val calendar = Calendar.getInstance()
 
@@ -252,6 +254,8 @@ fun RegisterBody() {
                     Toast.makeText(context,
                         "Registration success",
                         Toast.LENGTH_SHORT).show()
+
+                    activity.finish()
                 }
             }) {
                 Text("Register")
