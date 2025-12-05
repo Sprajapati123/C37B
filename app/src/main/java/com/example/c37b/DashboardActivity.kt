@@ -62,39 +62,39 @@ fun DashboardBody(){
     )
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    navigationIconContentColor = White,
-                    actionIconContentColor = White,
-                    titleContentColor = White,
-                    containerColor = Blue
-                ),
-                title = {Text("Ecommerce")},
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_arrow_back_ios_24),
-                            contentDescription = null
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_visibility_24),
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_more_horiz_24),
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-        },
+//        topBar = {
+//            TopAppBar(
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    navigationIconContentColor = White,
+//                    actionIconContentColor = White,
+//                    titleContentColor = White,
+//                    containerColor = Blue
+//                ),
+//                title = {Text("Ecommerce")},
+//                navigationIcon = {
+//                    IconButton(onClick = {}) {
+//                        Icon(
+//                            painter = painterResource(R.drawable.outline_arrow_back_ios_24),
+//                            contentDescription = null
+//                        )
+//                    }
+//                },
+//                actions = {
+//                    IconButton(onClick = {}) {
+//                        Icon(
+//                            painter = painterResource(R.drawable.baseline_visibility_24),
+//                            contentDescription = null
+//                        )
+//                    }
+//                    IconButton(onClick = {}) {
+//                        Icon(
+//                            painter = painterResource(R.drawable.outline_more_horiz_24),
+//                            contentDescription = null
+//                        )
+//                    }
+//                }
+//            )
+//        },
         bottomBar = {
             NavigationBar {
                 listItems.forEachIndexed { index,item->
