@@ -35,10 +35,6 @@ interface UserRepo {
         callback: (Boolean, String) -> Unit
     )
 
-    //    {
-//        "success":true,
-//        "message":"Profile fetched successfully",
-//    }
     fun getUserById(
         userId: String,
         callback: (Boolean, String, UserModel?) -> Unit
