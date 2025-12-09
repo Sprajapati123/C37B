@@ -51,10 +51,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.c37b.model.UserModel
+import com.example.c37b.repository.UserRepoImpl
 import com.example.c37b.ui.theme.Blue
 import com.example.c37b.ui.theme.C37BTheme
 import com.example.c37b.ui.theme.Purple80
 import com.example.c37b.ui.theme.White
+import com.example.c37b.viewmodel.UserViewModel
 import java.util.Calendar
 
 class RegistrationActivity : ComponentActivity() {
@@ -69,6 +72,9 @@ class RegistrationActivity : ComponentActivity() {
 
 @Composable
 fun RegisterBody() {
+
+    val userViewModel = remember { UserViewModel(UserRepoImpl()) }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
@@ -239,24 +245,57 @@ fun RegisterBody() {
             }
 
             Button(onClick = {
-                if (!checkbox) {
+                if(!checkbox){
                     Toast.makeText(
                         context,
                         "Please accept terms & conditions",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else {
-                    editor.putString("email", email)
-                    editor.putString("password", password)
-                    editor.putString("date", selectedDate)
+                }else{
+                    userViewModel.register(email,password){
+                        success,message,userId->
+                        if(success){
+                            val model = UserModel(
+                                id = userId,
+                                firstName = "",
+                                lastName = "",
+                                email = email,
+                                gender = "",
+                                dob = selectedDate
+                                )
+                            userViewModel.addUserToDatabase(userId,model){
+                                success,message->
+                                if(success){
+                                    Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+                                    activity.finish()
+                                }else{
+                                    Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
 
-                    editor.apply()
-                    Toast.makeText(context,
-                        "Registration success",
-                        Toast.LENGTH_SHORT).show()
-
-                    activity.finish()
+                                }
+                            }
+                        }else{
+                            Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
+//                if (!checkbox) {
+//                    Toast.makeText(
+//                        context,
+//                        "Please accept terms & conditions",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else {
+//                    editor.putString("email", email)
+//                    editor.putString("password", password)
+//                    editor.putString("date", selectedDate)
+//
+//                    editor.apply()
+//                    Toast.makeText(context,
+//                        "Registration success",
+//                        Toast.LENGTH_SHORT).show()
+//
+//                    activity.finish()
+//                }
             }) {
                 Text("Register")
             }
