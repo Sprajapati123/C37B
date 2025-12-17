@@ -1,5 +1,6 @@
 package com.example.c37b
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -33,14 +34,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.trace
+import com.example.c37b.model.ProductModel
 import com.example.c37b.repository.ProductRepoImpl
 import com.example.c37b.ui.theme.Blue
 import com.example.c37b.ui.theme.White
 import com.example.c37b.viewmodel.ProductViewModel
+import kotlin.toString
 
 @Composable
 fun HomeScreen() {
@@ -50,8 +54,16 @@ fun HomeScreen() {
     var productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
     var showDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    val context = LocalContext.current
+    val data = productViewModel.products.observeAsState(initial = null)
+    LaunchedEffect(data.value) {
         productViewModel.getAllProduct()
+
+        data.value?.let { product ->
+            pName = product.productName
+            pPrice = product.price.toString()
+            pDesc = product.description
+        }
     }
 
     val products = productViewModel.allProducts.observeAsState(initial = emptyList())
@@ -69,8 +81,22 @@ fun HomeScreen() {
                     }, // dismiss when clicked outside
                     confirmButton = {
                         TextButton (onClick = {
-                            // Confirm action
-                            showDialog = false
+                            val model = ProductModel(
+                                productId = data.value!!.productId,
+                                productName = pName,
+                                price = pPrice.toDouble(),
+                                description = pDesc,
+                                categoryId = ""
+
+                            )
+                            productViewModel.updateProduct(model){
+                                success,message->
+                                if(success){
+                                    showDialog = false
+                                }else{
+                                    Toast.makeText(context,message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }) {
                             Text("Update")
                         }
@@ -109,6 +135,7 @@ fun HomeScreen() {
                     Text(data.description)
                     IconButton(onClick = {
                         showDialog = true
+                        productViewModel.getProductById(data.productId)
                     }) { Icon(Icons.Default.Edit, contentDescription = null) }
 
                     IconButton(onClick = {
