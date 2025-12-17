@@ -15,12 +15,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,7 +44,11 @@ import com.example.c37b.viewmodel.ProductViewModel
 
 @Composable
 fun HomeScreen() {
-    val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
+    var pName by remember { mutableStateOf("") }
+    var pPrice by remember { mutableStateOf("") }
+    var pDesc by remember { mutableStateOf("") }
+    var productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         productViewModel.getAllProduct()
@@ -55,6 +61,41 @@ fun HomeScreen() {
             .fillMaxSize()
             .background(White)
     ) {
+        item {
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showDialog = false
+                    }, // dismiss when clicked outside
+                    confirmButton = {
+                        TextButton (onClick = {
+                            // Confirm action
+                            showDialog = false
+                        }) {
+                            Text("Update")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton (onClick = {
+                            // Cancel action
+                            showDialog = false
+                        }) {
+                            Text("Cancel")
+                        }
+                    },
+                    title = { Text(text = "Update Product") },
+                    text = { Column {
+                        Text("Product name")
+                        OutlinedTextField(value = pName, onValueChange = {pName = it})
+                        Text("Product price")
+                        OutlinedTextField(value = pPrice, onValueChange = {pPrice = it})
+                        Text("Product description")
+                        OutlinedTextField(value = pDesc, onValueChange = {pDesc = it})
+                    } }
+                )
+            }
+        }
+
         items(products.value!!.size) { index ->
             val data = products.value!![index]
             Card(
@@ -67,12 +108,12 @@ fun HomeScreen() {
                     Text(data.price.toString())
                     Text(data.description)
                     IconButton(onClick = {
-
-                    }) { Icon(Icons.Default.Edit,contentDescription = null)}
+                        showDialog = true
+                    }) { Icon(Icons.Default.Edit, contentDescription = null) }
 
                     IconButton(onClick = {
 
-                    }) { Icon(Icons.Default.Delete,contentDescription = null)}
+                    }) { Icon(Icons.Default.Delete, contentDescription = null) }
                 }
             }
         }
