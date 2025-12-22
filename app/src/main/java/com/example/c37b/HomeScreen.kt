@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.trace
+import coil3.compose.AsyncImage
 import com.example.c37b.model.ProductModel
 import com.example.c37b.repository.ProductRepoImpl
 import com.example.c37b.ui.theme.Blue
@@ -130,6 +131,12 @@ fun HomeScreen() {
                     .padding(horizontal = 15.dp, vertical = 15.dp)
             ) {
                 Column {
+                    AsyncImage(
+                        data.imageUrl,
+                        contentDescription = "Selected Image",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
                     Text(data.productName)
                     Text(data.price.toString())
                     Text(data.description)
