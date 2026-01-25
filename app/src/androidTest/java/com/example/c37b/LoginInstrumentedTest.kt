@@ -36,7 +36,7 @@ class LoginInstrumentedTest {
             .performTextInput("ram@gmail.com")
 
         composeRule.onNodeWithTag("password")
-            .performTextInput("password")
+            .performTextInput("passwords")
         // Click Login
         composeRule.onNodeWithTag("login")
             .performClick()
