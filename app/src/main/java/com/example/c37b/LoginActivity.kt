@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -187,7 +188,7 @@ fun LoginBody() {
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().testTag("email")
                     .padding(horizontal = 15.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -209,7 +210,7 @@ fun LoginBody() {
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().testTag("password")
                     .padding(horizontal = 15.dp),
                 visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -230,7 +231,11 @@ fun LoginBody() {
                 }
             )
 
-            Button(onClick = {
+            Button(
+                modifier = Modifier.testTag("login")
+                ,
+
+                onClick = {
               if(localEmail == email && localPassword == password){
                   val intent = Intent(
                       context,
@@ -245,7 +250,7 @@ fun LoginBody() {
             }) {
                 Text("Login")
             }
-            Text("Don't have an account, Signup", modifier = Modifier.clickable {
+            Text("Don't have an account, Signup", modifier = Modifier.testTag("register").clickable {
                 val intent = Intent(
                     context,
                     RegistrationActivity::class.java
